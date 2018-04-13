@@ -260,7 +260,7 @@ class Transformer(TextEncoder):
 
             ####    Divide outptus into h * heads
 
-            outputs = [outputs[h*batch_size, h+1*batch_size] for h in range(self.num_heads)]
+            outputs = [outputs[h*batch_size, (h+1)*batch_size] for h in range(self.num_heads)]
 
             # Restore shape
             #outputs = tf.concat(tf.split(outputs, num_heads, axis=0), axis=-1 ) # (N, T_q, C)
