@@ -126,18 +126,15 @@ class Transformer(TextEncoder):
 
 
                 ### Feed Forward
-                in_dim = 16
-                #for h in range(self.num_heads):
-                #    with tf.variable_scope("FFN_{}".format(h)):
-                #        input_feats[h] = self.feedforward(input_feats[h],
-                #                                    num_units=[in_dim*self.ff_scale, in_dim], reuse = True)
+                
+                FFN_in_dim = int(in_dim/self.num_heads)
                 input_feats = self.feedforward(input_feats, num_heads = self.num_heads,
-                                                num_units=[in_dim*self.ff_scale, in_dim], reuse = reuse)
+                                                num_units=[FFN_in_dim*self.ff_scale, FFN_in_dim], reuse = reuse)
 
                 input_feats = [input_feats[h] * self.w_alpha[h] for h in range(self.num_heads)]
 
                 input_feats = tf.concat(input_feats, axis=0)
-                input_feats = tf.reshape(input_feats, [batch_size, -1, in_dim*self.num_heads])
+                input_feats = tf.reshape(input_feats, [batch_size, -1, FFN_in_dim*self.num_heads])
 
 
         return input_feats
